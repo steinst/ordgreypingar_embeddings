@@ -36,22 +36,22 @@ class RmhExtractor:
                     for element in tree.iter():
                         rmh_word = RmhWord()
                         try:
-                            if element.attrib.get('lemma') is not None:
+                            if element.attrib.get('pos') is not None:
                                 if forms:
                                     rmh_word.word_form = element.text
                                 if lemmas:
                                     rmh_word.lemma = element.attrib.get('lemma')
+                                else:
+                                    rmh_word.lemma = element.text
                                 if pos:
-                                    rmh_word.pos = element.attrib.get('type')
+                                    rmh_word.pos = element.attrib.get('pos')
                                 yield rmh_word
-                            elif element.text in punctuation:
-                                rmh_word.word_form = element.text
-                                rmh_word.lemma = element.text
-                                rmh_word.pos = element.text
-                                rmh_word.is_punctuation_mark = True
+                            else:
+                                rmh_word.word_form = 'LINU_LYKUR_HER'
                                 yield rmh_word
                         except TypeError:
-                            pass
+                            rmh_word.word_form = 'LINU_LYKUR_HER'
+                            yield rmh_word
                 except ET.ParseError:
                     continue
             filebar.next()
